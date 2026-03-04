@@ -2,8 +2,11 @@
 
 > A Limit Order Protocol on Ethereum Sepolia — ported from [orlim](https://github.com/Vietnam-Sui-Builders/orlim) on Sui.
 
-[![CI](https://github.com/bernieweb3/orlimeth/actions/workflows/ci.yml/badge.svg)](https://github.com/bernieweb3/orlimeth/actions)
+[![Solidity](https://img.shields.io/badge/Solidity-0.8.20-363636?logo=solidity)](https://soliditylang.org/)
+[![Foundry](https://img.shields.io/badge/Built%20with-Foundry-FFDB1C?logo=ethereum)](https://book.getfoundry.sh/)
+[![Tests](https://img.shields.io/badge/Tests-41%2F41%20passing-00FF9D)](contracts/test/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Network](https://img.shields.io/badge/Network-Sepolia-00D1FF)](https://sepolia.etherscan.io/address/0x3ced97b7001bbd567563fb6efdf16709dddd10f7)
 
 ---
 
