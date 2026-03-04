@@ -1,0 +1,123 @@
+# GraphQL Test Queries for orlimeth Indexer
+# Reference: Implementation Plan Task 4.3
+# Use these queries to verify the indexer is syncing correctly
+
+# ─────────────────────────────────────────────────
+# Query 1: Fetch all OPEN orders (for Order Book)
+# ─────────────────────────────────────────────────
+query OpenOrders {
+  orders(where: { status: "OPEN" }, orderBy: createdAt, orderDirection: desc) {
+    id
+    maker
+    tokenIn
+    tokenOut
+    amountIn
+    amountOut
+    remainingAmount
+    expiry
+    createdAt
+  }
+}
+
+# ─────────────────────────────────────────────────
+# Query 2: Fetch orders for a specific user
+# ─────────────────────────────────────────────────
+query UserOrders($userId: ID!) {
+  user(id: $userId) {
+    id
+    totalOrders
+    activeOrders
+    filledOrders
+    cancelledOrders
+    orders(orderBy: createdAt, orderDirection: desc) {
+      id
+      status
+      amountIn
+      amountOut
+      remainingAmount
+      expiry
+      createdAt
+    }
+  }
+}
+
+# ─────────────────────────────────────────────────
+# Query 3: Protocol-wide metrics (for dashboard)
+# ─────────────────────────────────────────────────
+query ProtocolMetrics {
+  protocolMetric(id: "global") {
+    totalOrders
+    totalFilled
+    totalCancelled
+    totalFillEvents
+    totalVolumeTokenIn
+    currentFeeBps
+  }
+}
+
+# ─────────────────────────────────────────────────
+# Query 4: Order detail with fill history
+# ─────────────────────────────────────────────────
+query OrderDetail($orderId: ID!) {
+  order(id: $orderId) {
+    id
+    maker
+    tokenIn
+    tokenOut
+    amountIn
+    amountOut
+    remainingAmount
+    status
+    expiry
+    createdAt
+    createdTxHash
+    filledAt
+    cancelledAt
+    filler
+    fillCount
+  }
+  fills(where: { order: $orderId }, orderBy: timestamp, orderDirection: asc) {
+    id
+    filler
+    amountFilled
+    timestamp
+    txHash
+  }
+}
+
+# ─────────────────────────────────────────────────
+# Query 5: Recent fills (for Recent Trades sidebar)
+# ─────────────────────────────────────────────────
+query RecentFills {
+  fills(first: 20, orderBy: timestamp, orderDirection: desc) {
+    id
+    filler
+    amountFilled
+    timestamp
+    txHash
+    order {
+      tokenIn
+      tokenOut
+      amountIn
+      amountOut
+    }
+  }
+}
+
+# ─────────────────────────────────────────────────
+# Query 6: Orders by token pair (for Market View)
+# ─────────────────────────────────────────────────
+query OrdersByPair($tokenIn: String!, $tokenOut: String!) {
+  orders(
+    where: { tokenIn: $tokenIn, tokenOut: $tokenOut, status: "OPEN" }
+    orderBy: amountOut
+    orderDirection: asc
+  ) {
+    id
+    maker
+    amountIn
+    amountOut
+    remainingAmount
+    expiry
+  }
+}

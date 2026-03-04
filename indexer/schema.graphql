@@ -1,0 +1,56 @@
+# GraphQL Schema for orlimeth Indexer
+# Matches SDD §4.1 API Structure
+# Reference: CONTEXT.md lines 296-311
+
+enum OrderStatus {
+  OPEN
+  FILLED
+  CANCELLED
+}
+
+type Order @entity {
+  id: ID!                  # bytes32 orderId (hex string)
+  maker: String!           # address of the order creator
+  tokenIn: String!         # address of the escrowed token
+  tokenOut: String!        # address of the desired token
+  amountIn: BigInt!        # total amount of tokenIn escrowed
+  amountOut: BigInt!       # desired amount of tokenOut
+  remainingAmount: BigInt! # remaining unfilled tokenIn amount
+  status: OrderStatus!     # current lifecycle status
+  expiry: BigInt!          # unix timestamp expiry
+  createdAt: BigInt!       # block.timestamp at creation
+  createdTxHash: String!   # transaction hash of OrderCreated
+  filledAt: BigInt         # block.timestamp when fully filled (nullable)
+  cancelledAt: BigInt      # block.timestamp when cancelled (nullable)
+  filler: String           # address of the last/final filler (nullable)
+  fillCount: Int!          # number of fill events received
+  user: User!              # reference to the maker User entity
+}
+
+type User @entity {
+  id: ID!                  # address (lowercase hex)
+  totalOrders: Int!        # total orders ever created
+  activeOrders: Int!       # currently open orders
+  filledOrders: Int!       # orders fully filled
+  cancelledOrders: Int!    # orders cancelled
+  orders: [Order!]! @derivedFrom(field: "user")
+}
+
+type Fill @entity {
+  id: ID!                  # txHash-logIndex
+  order: Order!            # reference to the filled order
+  filler: String!          # address of the filler
+  amountFilled: BigInt!    # amount of tokenIn filled in this tx
+  timestamp: BigInt!       # block.timestamp
+  txHash: String!          # transaction hash
+}
+
+type ProtocolMetric @entity {
+  id: ID!                  # "global" singleton
+  totalOrders: Int!        # total orders ever created
+  totalFilled: Int!        # total orders fully filled
+  totalCancelled: Int!     # total orders cancelled
+  totalFillEvents: Int!    # total fill events (including partials)
+  totalVolumeTokenIn: BigInt!  # cumulative volume of tokenIn filled
+  currentFeeBps: BigInt!   # current protocol fee in basis points
+}

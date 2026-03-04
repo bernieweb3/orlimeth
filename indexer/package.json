@@ -1,0 +1,19 @@
+{
+    "name": "orlimeth-indexer",
+    "version": "1.0.0",
+    "description": "Envio indexer for orlimeth Limit Order Protocol on Sepolia",
+    "private": true,
+    "scripts": {
+        "dev": "envio dev",
+        "start": "envio start",
+        "codegen": "envio codegen",
+        "stop": "envio stop"
+    },
+    "dependencies": {
+        "envio": "^2.0.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.3.0",
+        "@types/node": "^20.0.0"
+    }
+}

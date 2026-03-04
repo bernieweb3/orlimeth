@@ -1,0 +1,19 @@
+# Envio Indexer Configuration for orlimeth
+# Docs: https://docs.envio.dev/docs/HyperIndex/configuration-file
+
+name: orlimeth-indexer
+description: Indexes OrderManager events for the orlimeth limit order protocol
+networks:
+  - id: 11155111 # Ethereum Sepolia
+    start_block: 0 # Update to deployment block for faster sync
+    contracts:
+      - name: OrderManager
+        address:
+          - "0x0000000000000000000000000000000000000000" # Replace with deployed address
+        handler: src/EventHandlers.ts
+        events:
+          - event: OrderCreated(bytes32 indexed orderId, address indexed maker, address tokenIn, address tokenOut, uint128 amountIn, uint128 amountOut, uint64 expiry)
+          - event: OrderFilled(bytes32 indexed orderId, address indexed filler, uint128 amountFilled)
+          - event: OrderCancelled(bytes32 indexed orderId)
+          - event: FeeUpdated(uint256 oldFeeBps, uint256 newFeeBps)
+          - event: TreasuryUpdated(address oldTreasury, address newTreasury)
